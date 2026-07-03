@@ -48,8 +48,8 @@
         <field name="arch" type="xml">
             <form string="Visiteur" class="ar_visiteur_form_view">
                 <header>
-                    <button name="action_save_visiteur" string="Enregistrer" type="object" class="btn-primary"/>
-                    <button name="action_marquer_sortie" string="Marquer la sortie" type="object" class="btn-primary" invisible="state != 'en_cours'"/>
+                    <button name="action_marquer_sortie" string="Marquer la sortie" type="object" class="btn-primary ar_visiteur_btn_exit" invisible="state != 'en_cours'"/>
+                    <button name="action_save_visiteur" string="Enregistrer" type="object" class="btn-primary ar_visiteur_btn_save"/>
                     <button name="action_archiver" string="Archiver" type="object" invisible="state != 'sorti'"/>
                     <button name="action_remettre_en_cours" string="Remettre en cours" type="object" invisible="state != 'sorti'"/>
                     <field name="state" widget="statusbar" statusbar_visible="en_cours,sorti,archive"/>
@@ -85,8 +85,8 @@
                                 </group>
                                 <group class="ar_visiteur_panel" string="Sortie">
                                     <field name="sortie_marquee" invisible="1"/>
-                                    <field name="date_sortie" readonly="state != 'en_cours'"/>
-                                    <field name="heure_sortie" widget="float_time" readonly="state != 'en_cours'"/>
+                                    <field name="date_sortie" readonly="1"/>
+                                    <field name="heure_sortie" widget="float_time" readonly="1"/>
                                     <field name="duree_visite" widget="float_time" readonly="1"/>
                                 </group>
                             </div>

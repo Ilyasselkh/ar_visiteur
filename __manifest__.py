@@ -19,6 +19,7 @@ Module de gestion des visiteurs :
     ],
     "data": [
         "data/sequence.xml",
+        "data/mail_templates.xml",
         "security/security.xml",
         "security/ir.model.access.csv",
         "views/ar_visiteur_views.xml",

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_ar_visiteur_root"
-              name="AR - Visiteur"
+              name="AR Visiteur"
               action="action_ar_visiteur_demande"
               sequence="13"
               groups="base.group_user"/>

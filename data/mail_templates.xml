@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_ar_visiteur_notification" model="mail.template">
+        <field name="name">AR - Visiteur - Notification personne à visiter</field>
+        <field name="model_id" ref="model_ar_visiteur"/>
+        <field name="subject">[Visiteur] {{ object.nom }} {{ object.prenom }} est arrivé pour vous rencontrer</field>
+        <field name="email_from">Accueil &lt;AR-ARMaroc@araymond.com&gt;</field>
+        <field name="email_to"></field>
+        <field name="body_html" type="html">
+            <div>
+                <p>Bonjour <t t-out="object.personne_a_visiter_id.name or ''"/>,</p>
+
+                <p>Nous vous informons qu'un visiteur est arrivé pour vous rencontrer.</p>
+
+                <p><b>Informations du visiteur :</b></p>
+                <ul>
+                    <li><b>Nom :</b> <t t-out="object.nom or ''"/></li>
+                    <li><b>Prénom :</b> <t t-out="object.prenom or ''"/></li>
+                    <li><b>CIN :</b> <t t-out="object.cin or ''"/></li>
+                    <li><b>Date d'entrée :</b> <span t-field="object.date_entree"/></li>
+                    <li><b>Heure d'entrée :</b> <span t-field="object.heure_entree" t-options="{'widget': 'float_time'}"/></li>
+                </ul>
+
+                <p>Merci de bien vouloir prendre les dispositions nécessaires pour l'accueillir.</p>
+
+                <p>
+                    Cordialement,<br/>
+                    Service Accueil / Sécurité
+                </p>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -57,6 +57,7 @@ class ArVisiteur(models.Model):
         tracking=True,
         help="Personne à visiter.",
     )
+    visite_notification_sent = fields.Boolean(string="Notification envoyée", readonly=True, copy=False)
     sortie_marquee = fields.Boolean(string="Sortie marquée", readonly=True, copy=False)
     date_sortie = fields.Date(string="Date de sortie", tracking=True)
     heure_sortie = fields.Float(string="Heure de sortie", tracking=True)
@@ -79,7 +80,51 @@ class ArVisiteur(models.Model):
         for vals in vals_list:
             if vals.get("name", "Nouveau") == "Nouveau":
                 vals["name"] = sequence.next_by_code("ar.visiteur") or "Nouveau"
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        records._send_visit_notification()
+        return records
+
+    def _clean_header(self, value):
+        if not value:
+            return False
+        return str(value).replace("\n", "").replace("\r", "").strip()
+
+    def _get_employee_email(self, employee):
+        if not employee:
+            return False
+        employee = employee.sudo()
+        email = False
+        if employee.user_id:
+            email = employee.user_id.partner_id.email or employee.user_id.email
+        if not email:
+            email = employee.work_email
+        return self._clean_header(email) if email else False
+
+    def _send_visit_notification(self):
+        template = self.env.ref("ar_visiteur.mail_template_ar_visiteur_notification", raise_if_not_found=False)
+        if not template:
+            return
+        for rec in self:
+            if rec.visite_notification_sent or not rec.personne_a_visiter_id:
+                continue
+            email_to = rec._get_employee_email(rec.personne_a_visiter_id)
+            if not email_to:
+                rec.message_post(
+                    body=_("Notification non envoyée : la personne à visiter n'a pas d'adresse e-mail professionnelle."),
+                    subtype_xmlid="mail.mt_note",
+                )
+                continue
+            reply_to = self.env.user.partner_id.email or self.env.user.email or ""
+            email_values = {
+                "email_to": rec._clean_header(email_to),
+                "reply_to": rec._clean_header(reply_to),
+            }
+            template.send_mail(rec.id, force_send=True, email_values=email_values)
+            rec.visite_notification_sent = True
+            rec.message_post(
+                body=_("Notification envoyée à %s.") % rec.personne_a_visiter_id.name,
+                subtype_xmlid="mail.mt_note",
+            )
 
     @api.depends("date_entree", "heure_entree", "date_sortie", "heure_sortie")
     def _compute_duree_visite(self):
@@ -148,4 +193,5 @@ class ArVisiteur(models.Model):
         self.write({"state": "en_cours", "date_sortie": False, "heure_sortie": False, "sortie_marquee": False})
 
     def action_save_visiteur(self):
+        self._send_visit_notification()
         return True
