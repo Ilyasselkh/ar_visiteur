@@ -49,7 +49,7 @@
             <form string="Visiteur" class="ar_visiteur_form_view">
                 <header>
                     <button name="action_marquer_sortie" string="Marquer la sortie" type="object" class="btn-primary ar_visiteur_btn_exit" invisible="state != 'en_cours'"/>
-                    <button name="action_save_visiteur" string="Enregistrer" type="object" class="btn-primary ar_visiteur_btn_save"/>
+                    <button name="action_save_visiteur" string="Enregistrer" type="object" class="btn-primary ar_visiteur_btn_save" invisible="state != 'en_cours'"/>
                     <button name="action_archiver" string="Archiver" type="object" invisible="state != 'sorti'"/>
                     <button name="action_remettre_en_cours" string="Remettre en cours" type="object" invisible="state != 'sorti'"/>
                     <field name="state" widget="statusbar" statusbar_visible="en_cours,sorti,archive"/>
@@ -75,13 +75,13 @@
                                     <field name="heure_entree" widget="float_time" readonly="1"/>
                                 </group>
                                 <group class="ar_visiteur_panel" string="Identité">
-                                    <field name="nom"/>
-                                    <field name="prenom"/>
-                                    <field name="cin"/>
+                                    <field name="nom" readonly="state != 'en_cours'"/>
+                                    <field name="prenom" readonly="state != 'en_cours'"/>
+                                    <field name="cin" readonly="state != 'en_cours'"/>
                                 </group>
                                 <group class="ar_visiteur_panel" string="Visite">
-                                    <field name="visite_terrain" widget="radio"/>
-                                    <field name="personne_a_visiter_id" options="{'no_create': True}"/>
+                                    <field name="visite_terrain" widget="radio" readonly="state != 'en_cours'"/>
+                                    <field name="personne_a_visiter_id" options="{'no_create': True}" readonly="state != 'en_cours'"/>
                                 </group>
                                 <group class="ar_visiteur_panel" string="Sortie">
                                     <field name="sortie_marquee" invisible="1"/>

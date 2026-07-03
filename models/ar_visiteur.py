@@ -195,3 +195,23 @@ class ArVisiteur(models.Model):
     def action_save_visiteur(self):
         self._send_visit_notification()
         return True
+
+    def action_supprimer(self):
+        for rec in self:
+            if rec.state != "en_cours":
+                raise ValidationError(_("Vous pouvez supprimer uniquement une demande en cours."))
+        self.sudo().unlink()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Demande"),
+            "res_model": "ar.visiteur",
+            "view_mode": "list,form",
+            "domain": [("state", "=", "en_cours")],
+            "context": {"search_default_en_cours": 1},
+        }
+
+    def unlink(self):
+        for rec in self:
+            if rec.state != "en_cours":
+                raise ValidationError(_("Vous pouvez supprimer uniquement une demande en cours."))
+        return super().unlink()
