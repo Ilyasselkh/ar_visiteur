@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ar_visiteur_search" model="ir.ui.view">
+        <field name="name">ar.visiteur.search</field>
+        <field name="model">ar.visiteur</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="nom"/>
+                <field name="prenom"/>
+                <field name="cin"/>
+                <field name="personne_a_visiter_id"/>
+                <filter string="En cours" name="en_cours" domain="[('state', '=', 'en_cours')]"/>
+                <filter string="Sorti" name="sorti" domain="[('state', '=', 'sorti')]"/>
+                <filter string="Archive" name="archive" domain="[('state', '=', 'archive')]"/>
+                <group>
+                    <filter string="État" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Date d'entrée" name="group_date_entree" context="{'group_by': 'date_entree'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_ar_visiteur_list" model="ir.ui.view">
+        <field name="name">ar.visiteur.list</field>
+        <field name="model">ar.visiteur</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'sorti'" decoration-muted="state == 'archive'">
+                <field name="name"/>
+                <field name="date_entree"/>
+                <field name="heure_entree" widget="float_time"/>
+                <field name="nom"/>
+                <field name="prenom"/>
+                <field name="cin"/>
+                <field name="visite_terrain"/>
+                <field name="personne_a_visiter_id"/>
+                <field name="date_sortie"/>
+                <field name="heure_sortie" widget="float_time"/>
+                <field name="duree_visite" widget="float_time"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ar_visiteur_form" model="ir.ui.view">
+        <field name="name">ar.visiteur.form</field>
+        <field name="model">ar.visiteur</field>
+        <field name="arch" type="xml">
+            <form string="Visiteur" class="ar_visiteur_form_view">
+                <header>
+                    <button name="action_save_visiteur" string="Enregistrer" type="object" class="btn-primary"/>
+                    <button name="action_marquer_sortie" string="Marquer la sortie" type="object" class="btn-primary" invisible="state != 'en_cours'"/>
+                    <button name="action_archiver" string="Archiver" type="object" invisible="state != 'sorti'"/>
+                    <button name="action_remettre_en_cours" string="Remettre en cours" type="object" invisible="state != 'sorti'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="en_cours,sorti,archive"/>
+                </header>
+                <sheet>
+                    <div class="ar_visiteur_split_page">
+                        <div class="ar_visiteur_form_section">
+                            <div class="ar_visiteur_header">
+                                <div>
+                                    <span class="ar_visiteur_badge">Formulaire des visiteurs</span>
+                                    <h1>
+                                        <field name="name" readonly="1"/>
+                                    </h1>
+                                </div>
+                                <div class="ar_visiteur_header_meta">
+                                    <span><field name="date_entree" readonly="1"/></span>
+                                    <strong><field name="heure_entree" widget="float_time" readonly="1"/></strong>
+                                </div>
+                            </div>
+                            <div class="o_ar_visiteur_infos">
+                                <group class="ar_visiteur_panel ar_visiteur_panel_entry" string="Entrée">
+                                    <field name="date_entree" readonly="1"/>
+                                    <field name="heure_entree" widget="float_time" readonly="1"/>
+                                </group>
+                                <group class="ar_visiteur_panel" string="Identité">
+                                    <field name="nom"/>
+                                    <field name="prenom"/>
+                                    <field name="cin"/>
+                                </group>
+                                <group class="ar_visiteur_panel" string="Visite">
+                                    <field name="visite_terrain" widget="radio"/>
+                                    <field name="personne_a_visiter_id" options="{'no_create': True}"/>
+                                </group>
+                                <group class="ar_visiteur_panel" string="Sortie">
+                                    <field name="sortie_marquee" invisible="1"/>
+                                    <field name="date_sortie" readonly="state != 'en_cours'"/>
+                                    <field name="heure_sortie" widget="float_time" readonly="state != 'en_cours'"/>
+                                    <field name="duree_visite" widget="float_time" readonly="1"/>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="ar_visiteur_pdf_section" invisible="visite_terrain != 'oui'">
+                            <div class="ar_visiteur_pdf_header">
+                                <div>
+                                    <span class="ar_visiteur_panel_label">Document d'accueil</span>
+                                    <strong><field name="pdf_accueil_filename" readonly="1"/></strong>
+                                </div>
+                            </div>
+                            <field name="pdf_accueil_filename" invisible="1"/>
+                            <div class="ar_visiteur_pdf_viewer">
+                                <field name="pdf_accueil_html" widget="html" readonly="1" nolabel="1"/>
+                            </div>
+                        </div>
+                    </div>
+                    <chatter/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ar_visiteur_demande" model="ir.actions.act_window">
+        <field name="name">Demande</field>
+        <field name="res_model">ar.visiteur</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ar_visiteur_search"/>
+        <field name="domain">[('state','=','en_cours')]</field>
+        <field name="context">{'search_default_en_cours': 1}</field>
+    </record>
+
+    <record id="action_ar_visiteur_archive" model="ir.actions.act_window">
+        <field name="name">Archive</field>
+        <field name="res_model">ar.visiteur</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ar_visiteur_search"/>
+        <field name="domain">[('state','in',('sorti','archive'))]</field>
+    </record>
+</odoo>

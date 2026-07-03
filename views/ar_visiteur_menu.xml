@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ar_visiteur_root"
+              name="AR - Visiteur"
+              action="action_ar_visiteur_demande"
+              sequence="13"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_ar_visiteur_demande"
+              name="Demande"
+              parent="menu_ar_visiteur_root"
+              action="action_ar_visiteur_demande"
+              sequence="10"/>
+
+    <menuitem id="menu_ar_visiteur_archive"
+              name="Archive"
+              parent="menu_ar_visiteur_root"
+              action="action_ar_visiteur_archive"
+              sequence="20"/>
+
+    <menuitem id="menu_ar_visiteur_parametrage"
+              name="Paramétrage"
+              parent="menu_ar_visiteur_root"
+              action="action_ar_visiteur_config"
+              sequence="30"
+              groups="ar_visiteur.group_ar_visiteur_param"/>
+</odoo>

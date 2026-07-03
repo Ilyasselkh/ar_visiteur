@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ar_visiteur_user,ar.visiteur user,model_ar_visiteur,base.group_user,1,1,1,0
+access_ar_visiteur_config_read,ar.visiteur.config read,model_ar_visiteur_config,base.group_user,1,0,0,0
+access_ar_visiteur_config_param,ar.visiteur.config param,model_ar_visiteur_config,ar_visiteur.group_ar_visiteur_param,1,1,1,1
