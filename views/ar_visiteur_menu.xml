@@ -18,6 +18,12 @@
               action="action_ar_visiteur_archive"
               sequence="20"/>
 
+    <menuitem id="menu_ar_visiteur_quiz_result"
+              name="Résultats Quiz"
+              parent="menu_ar_visiteur_root"
+              action="action_ar_visiteur_quiz_result_refresh"
+              sequence="25"/>
+
     <menuitem id="menu_ar_visiteur_parametrage"
               name="Paramétrage"
               parent="menu_ar_visiteur_root"

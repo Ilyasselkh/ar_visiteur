@@ -1,0 +1,33 @@
+html.ar_visiteur_survey_popup,
+html.ar_visiteur_survey_popup body,
+html.ar_visiteur_survey_popup #wrapwrap,
+html.ar_visiteur_survey_popup main {
+    min-height: 100%;
+    overflow-x: hidden !important;
+    background: #ffffff !important;
+}
+
+html.ar_visiteur_survey_popup .o_survey_form,
+html.ar_visiteur_survey_popup .o_survey_fill_form,
+html.ar_visiteur_survey_popup .o_survey_question_page {
+    min-height: auto !important;
+    padding-top: 18px !important;
+    padding-bottom: 24px !important;
+}
+
+html.ar_visiteur_survey_popup .o_survey_form_content,
+html.ar_visiteur_survey_popup .o_survey_question,
+html.ar_visiteur_survey_popup .container {
+    max-width: 820px !important;
+}
+
+html.ar_visiteur_survey_popup footer,
+html.ar_visiteur_survey_popup .o_footer,
+html.ar_visiteur_survey_popup .o_footer_copyright,
+html.ar_visiteur_survey_popup .o_brand_promotion,
+html.ar_visiteur_survey_popup .o_website_brand_promotion,
+html.ar_visiteur_survey_popup .o_powered_by_odoo,
+html.ar_visiteur_survey_popup a[href*="odoo.com"] {
+    display: none !important;
+    visibility: hidden !important;
+}

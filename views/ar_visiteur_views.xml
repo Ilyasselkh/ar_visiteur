@@ -11,6 +11,7 @@
                 <field name="cin"/>
                 <field name="personne_a_visiter_id"/>
                 <filter string="En cours" name="en_cours" domain="[('state', '=', 'en_cours')]"/>
+                <filter string="Quiz à faire" name="quiz" domain="[('state', '=', 'quiz')]"/>
                 <filter string="Sorti" name="sorti" domain="[('state', '=', 'sorti')]"/>
                 <filter string="Archive" name="archive" domain="[('state', '=', 'archive')]"/>
                 <group>
@@ -42,6 +43,74 @@
         </field>
     </record>
 
+    <record id="view_ar_visiteur_kanban" model="ir.ui.view">
+        <field name="name">ar.visiteur.kanban</field>
+        <field name="model">ar.visiteur</field>
+        <field name="arch" type="xml">
+            <kanban string="Demandes visiteurs" class="ar_visiteur_kanban">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="nom"/>
+                <field name="prenom"/>
+                <field name="cin"/>
+                <field name="personne_a_visiter_id"/>
+                <field name="date_entree"/>
+                <field name="heure_entree"/>
+                <field name="date_sortie"/>
+                <field name="heure_sortie"/>
+                <field name="duree_visite"/>
+                <field name="visite_terrain"/>
+                <field name="quiz_done"/>
+                <field name="signature_done"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click oe_kanban_card ar_visiteur_card">
+                            <div class="ar_card_topline"/>
+                            <div class="ar_card_header">
+                                <div>
+                                    <span class="ar_card_ref"><field name="name"/></span>
+                                    <strong class="ar_card_title">Demande visiteur</strong>
+                                </div>
+                                <field name="state" widget="badge"/>
+                            </div>
+                            <div class="ar_card_person">
+                                <span class="ar_card_avatar"><i class="fa fa-user"/></span>
+                                <div>
+                                    <span class="ar_card_label">Visiteur</span>
+                                    <strong><field name="nom"/> <field name="prenom"/></strong>
+                                </div>
+                            </div>
+                            <div class="ar_card_meta">
+                                <span><i class="fa fa-id-card-o"/> CIN : <field name="cin"/></span>
+                                <span><i class="fa fa-user-o"/> À visiter : <field name="personne_a_visiter_id"/></span>
+                                <span><i class="fa fa-sign-in"/> Entrée : <field name="date_entree"/> - <field name="heure_entree" widget="float_time"/></span>
+                                <span t-if="record.date_sortie.raw_value"><i class="fa fa-sign-out"/> Sortie : <field name="date_sortie"/> - <field name="heure_sortie" widget="float_time"/></span>
+                            </div>
+                            <div class="ar_card_totals">
+                                <div>
+                                    <span class="ar_card_label">Terrain</span>
+                                    <strong><field name="visite_terrain"/></strong>
+                                </div>
+                                <div>
+                                    <span class="ar_card_label">Durée</span>
+                                    <strong><field name="duree_visite" widget="float_time"/></strong>
+                                </div>
+                                <div>
+                                    <span class="ar_card_label">Quiz</span>
+                                    <strong><t t-if="record.quiz_done.raw_value">Effectué</t><t t-else="">Non effectué</t></strong>
+                                </div>
+                                <div>
+                                    <span class="ar_card_label">Signature</span>
+                                    <strong><t t-if="record.signature_done.raw_value">Signé</t><t t-else="">Non signé</t></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="view_ar_visiteur_form" model="ir.ui.view">
         <field name="name">ar.visiteur.form</field>
         <field name="model">ar.visiteur</field>
@@ -50,9 +119,12 @@
                 <header>
                     <button name="action_marquer_sortie" string="Marquer la sortie" type="object" class="btn-primary ar_visiteur_btn_exit" invisible="state != 'en_cours'"/>
                     <button name="action_save_visiteur" string="Enregistrer" type="object" class="btn-primary ar_visiteur_btn_save" invisible="state != 'en_cours'"/>
-                    <button name="action_archiver" string="Archiver" type="object" invisible="state != 'sorti'"/>
-                    <button name="action_remettre_en_cours" string="Remettre en cours" type="object" invisible="state != 'sorti'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="en_cours,sorti,archive"/>
+                    <button name="action_repondre_quiz" string="Répondre au quiz" type="object" class="btn-primary" invisible="state != 'quiz'"/>
+                    <button name="action_verifier_quiz" string="Vérifier le quiz" type="object" class="btn-success" invisible="state != 'quiz'"/>
+                    <button name="action_signer" string="Signer" type="object" class="btn-primary ar_visiteur_btn_sign" invisible="state != 'sorti' or signature_done"/>
+                    <button name="action_archiver" string="Archiver" type="object" invisible="state != 'sorti' or not signature_done"/>
+                    <button name="action_remettre_en_cours" string="Remettre en cours" type="object" invisible="state not in ['sorti', 'quiz']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="en_cours,quiz,sorti,archive"/>
                 </header>
                 <sheet>
                     <div class="ar_visiteur_split_page">
@@ -89,6 +161,20 @@
                                     <field name="heure_sortie" widget="float_time" readonly="1"/>
                                     <field name="duree_visite" widget="float_time" readonly="1"/>
                                 </group>
+                                <group class="ar_visiteur_panel ar_visiteur_signature_panel" string="Signature" invisible="not signature_done">
+                                    <field name="signature_done" invisible="1"/>
+                                    <field name="signature_date" readonly="1"/>
+                                    <field name="signature_user_id" readonly="1"/>
+                                    <field name="signature" widget="image" readonly="1" nolabel="1"/>
+                                </group>
+                                <group class="ar_visiteur_panel" string="Quiz" invisible="1">
+                                    <field name="quiz_required" readonly="1"/>
+                                    <field name="quiz_done" readonly="1"/>
+                                    <field name="quiz_date" readonly="1"/>
+                                    <field name="quiz_skipped_reason" readonly="1"/>
+                                    <field name="survey_id" readonly="1"/>
+                                    <field name="survey_user_input_id" readonly="1"/>
+                                </group>
                             </div>
                         </div>
                         <div class="ar_visiteur_pdf_section" invisible="visite_terrain != 'oui'">
@@ -113,10 +199,10 @@
     <record id="action_ar_visiteur_demande" model="ir.actions.act_window">
         <field name="name">Demande</field>
         <field name="res_model">ar.visiteur</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="view_ar_visiteur_search"/>
-        <field name="domain">[('state','=','en_cours')]</field>
-        <field name="context">{'search_default_en_cours': 1}</field>
+        <field name="domain">[('state','in',('en_cours','quiz','sorti'))]</field>
+        <field name="context">{}</field>
     </record>
 
     <record id="action_ar_visiteur_archive" model="ir.actions.act_window">
@@ -124,6 +210,6 @@
         <field name="res_model">ar.visiteur</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_ar_visiteur_search"/>
-        <field name="domain">[('state','in',('sorti','archive'))]</field>
+        <field name="domain">[('state','=','archive')]</field>
     </record>
 </odoo>

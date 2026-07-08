@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ar_visiteur_quiz_result_search" model="ir.ui.view">
+        <field name="name">ar.visiteur.quiz.result.search</field>
+        <field name="model">ar.visiteur.quiz.result</field>
+        <field name="arch" type="xml">
+            <search string="Résultats quiz">
+                <field name="reference"/>
+                <field name="nom"/>
+                <field name="prenom"/>
+                <field name="cin"/>
+                <field name="personne_a_visiter_id"/>
+                <field name="survey_id"/>
+                <filter string="À faire" name="required" domain="[('quiz_status', '=', 'required')]"/>
+                <filter string="Effectué" name="done" domain="[('quiz_status', '=', 'done')]"/>
+                <filter string="Ignoré" name="ignored" domain="[('quiz_status', '=', 'ignored')]"/>
+                <filter string="Réussi" name="success" domain="[('quiz_success', '=', True)]"/>
+                <separator/>
+                <filter string="Date du quiz" name="quiz_date_filter" date="quiz_date"/>
+                <group>
+                    <filter string="Visiteur" name="group_visitor" context="{'group_by': 'cin'}"/>
+                    <filter string="Personne visitée" name="group_employee" context="{'group_by': 'personne_a_visiter_id'}"/>
+                    <filter string="Quiz" name="group_survey" context="{'group_by': 'survey_id'}"/>
+                    <filter string="Statut" name="group_status" context="{'group_by': 'quiz_status'}"/>
+                    <filter string="Mois" name="group_month" context="{'group_by': 'quiz_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_ar_visiteur_quiz_result_list" model="ir.ui.view">
+        <field name="name">ar.visiteur.quiz.result.list</field>
+        <field name="model">ar.visiteur.quiz.result</field>
+        <field name="arch" type="xml">
+            <list string="Résultats quiz" decoration-success="quiz_status == 'done'" decoration-muted="quiz_status == 'ignored'">
+                <field name="quiz_date"/>
+                <field name="reference"/>
+                <field name="nom"/>
+                <field name="prenom"/>
+                <field name="cin"/>
+                <field name="personne_a_visiter_id"/>
+                <field name="survey_id"/>
+                <field name="quiz_status" widget="badge"/>
+                <field name="score"/>
+                <field name="score_percentage"/>
+                <field name="quiz_success"/>
+                <field name="survey_user_input_id" column_invisible="1"/>
+                <button name="action_open_visiteur" type="object" string="Demande" icon="fa-external-link"/>
+                <button name="action_open_survey_answer" type="object" string="Réponse" icon="fa-list-alt" invisible="not survey_user_input_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ar_visiteur_quiz_result_kanban" model="ir.ui.view">
+        <field name="name">ar.visiteur.quiz.result.kanban</field>
+        <field name="model">ar.visiteur.quiz.result</field>
+        <field name="arch" type="xml">
+            <kanban string="Résultats quiz" class="ar_visiteur_kanban">
+                <field name="reference"/>
+                <field name="nom"/>
+                <field name="prenom"/>
+                <field name="cin"/>
+                <field name="personne_a_visiter_id"/>
+                <field name="survey_id"/>
+                <field name="quiz_status"/>
+                <field name="quiz_date"/>
+                <field name="score"/>
+                <field name="score_percentage"/>
+                <field name="quiz_success"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click oe_kanban_card ar_visiteur_card">
+                            <div class="ar_card_topline"/>
+                            <div class="ar_card_header">
+                                <div>
+                                    <span class="ar_card_ref"><field name="reference"/></span>
+                                    <strong class="ar_card_title">Résultat quiz</strong>
+                                </div>
+                                <field name="quiz_status" widget="badge"/>
+                            </div>
+                            <div class="ar_card_person">
+                                <span class="ar_card_avatar"><i class="fa fa-check-square-o"/></span>
+                                <div>
+                                    <span class="ar_card_label">Visiteur</span>
+                                    <strong><field name="nom"/> <field name="prenom"/></strong>
+                                </div>
+                            </div>
+                            <div class="ar_card_meta">
+                                <span><i class="fa fa-id-card-o"/> CIN : <field name="cin"/></span>
+                                <span><i class="fa fa-user-o"/> Personne visitée : <field name="personne_a_visiter_id"/></span>
+                                <span><i class="fa fa-list-alt"/> Quiz : <field name="survey_id"/></span>
+                                <span><i class="fa fa-calendar-o"/> Date : <field name="quiz_date"/></span>
+                            </div>
+                            <div class="ar_card_totals">
+                                <div>
+                                    <span class="ar_card_label">Score</span>
+                                    <strong><field name="score"/></strong>
+                                </div>
+                                <div>
+                                    <span class="ar_card_label">Pourcentage</span>
+                                    <strong><field name="score_percentage"/> %</strong>
+                                </div>
+                                <div>
+                                    <span class="ar_card_label">Réussite</span>
+                                    <strong><t t-if="record.quiz_success.raw_value">Réussi</t><t t-else="">Non réussi</t></strong>
+                                </div>
+                                <div>
+                                    <span class="ar_card_label">Statut</span>
+                                    <strong><field name="quiz_status"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ar_visiteur_quiz_result_form" model="ir.ui.view">
+        <field name="name">ar.visiteur.quiz.result.form</field>
+        <field name="model">ar.visiteur.quiz.result</field>
+        <field name="arch" type="xml">
+            <form string="Résultat quiz">
+                <header>
+                    <button name="action_open_visiteur" type="object" string="Ouvrir la demande" class="btn-primary"/>
+                    <button name="action_open_survey_answer" type="object" string="Ouvrir la réponse" invisible="not survey_user_input_id"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group string="Visiteur">
+                            <field name="visiteur_id" readonly="1"/>
+                            <field name="reference" readonly="1"/>
+                            <field name="nom" readonly="1"/>
+                            <field name="prenom" readonly="1"/>
+                            <field name="cin" readonly="1"/>
+                            <field name="personne_a_visiter_id" readonly="1"/>
+                        </group>
+                        <group string="Quiz">
+                            <field name="survey_id" readonly="1"/>
+                            <field name="survey_user_input_id" readonly="1"/>
+                            <field name="quiz_status" readonly="1"/>
+                            <field name="quiz_date" readonly="1"/>
+                            <field name="quiz_skipped_reason" readonly="1" invisible="not quiz_skipped_reason"/>
+                        </group>
+                        <group string="Résultat">
+                            <field name="score" readonly="1"/>
+                            <field name="score_percentage" readonly="1"/>
+                            <field name="quiz_success" readonly="1"/>
+                            <field name="question_count" readonly="1"/>
+                            <field name="answer_count" readonly="1"/>
+                        </group>
+                        <group string="Visite">
+                            <field name="date_entree" readonly="1"/>
+                            <field name="date_sortie" readonly="1"/>
+                            <field name="duree_visite" widget="float_time" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ar_visiteur_quiz_result_pivot" model="ir.ui.view">
+        <field name="name">ar.visiteur.quiz.result.pivot</field>
+        <field name="model">ar.visiteur.quiz.result</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse des résultats quiz">
+                <field name="personne_a_visiter_id" type="row"/>
+                <field name="quiz_status" type="col"/>
+                <field name="score_percentage" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_ar_visiteur_quiz_result_graph" model="ir.ui.view">
+        <field name="name">ar.visiteur.quiz.result.graph</field>
+        <field name="model">ar.visiteur.quiz.result</field>
+        <field name="arch" type="xml">
+            <graph string="Résultats quiz" type="bar">
+                <field name="personne_a_visiter_id"/>
+                <field name="score_percentage" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_ar_visiteur_quiz_result" model="ir.actions.act_window">
+        <field name="name">Résultats Quiz</field>
+        <field name="res_model">ar.visiteur.quiz.result</field>
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_ar_visiteur_quiz_result_search"/>
+        <field name="context">{'search_default_group_visitor': 1}</field>
+    </record>
+
+    <record id="action_ar_visiteur_quiz_result_refresh" model="ir.actions.server">
+        <field name="name">Résultats Quiz</field>
+        <field name="model_id" ref="model_ar_visiteur"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[
+visiteurs = env["ar.visiteur"].search([
+    "|", "|",
+    ("quiz_required", "=", True),
+    ("quiz_done", "=", True),
+    ("quiz_skipped_reason", "!=", False),
+])
+visiteurs._sync_quiz_result()
+action = env.ref("ar_visiteur.action_ar_visiteur_quiz_result").read()[0]
+        ]]></field>
+    </record>
+
+    <record id="view_ar_visiteur_form_quiz_result_button" model="ir.ui.view">
+        <field name="name">ar.visiteur.form.quiz.result.button</field>
+        <field name="model">ar.visiteur</field>
+        <field name="inherit_id" ref="ar_visiteur.view_ar_visiteur_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('ar_visiteur_split_page')]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_quiz_results" type="object" class="oe_stat_button" icon="fa-check-square-o" invisible="quiz_result_count == 0">
+                        <field name="quiz_result_count" widget="statinfo" string="Résultats quiz"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_form_ar_visiteur_quiz_results" model="ir.ui.view">
+        <field name="name">hr.employee.form.ar.visiteur.quiz.results</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_ar_visiteur_quiz_results" type="object" class="oe_stat_button" icon="fa-check-square-o" invisible="ar_visiteur_quiz_result_count == 0">
+                    <field name="ar_visiteur_quiz_result_count" widget="statinfo" string="Quiz visiteurs"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

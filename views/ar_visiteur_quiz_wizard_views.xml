@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ar_visiteur_quiz_wizard_form" model="ir.ui.view">
+        <field name="name">ar.visiteur.quiz.wizard.form</field>
+        <field name="model">ar.visiteur.quiz.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quiz visiteur" class="ar_visiteur_quiz_wizard">
+                <sheet>
+                    <field name="visiteur_id" invisible="1"/>
+                    <field name="survey_url" invisible="1"/>
+                    <div class="ar_visiteur_quiz_popup">
+                        <field name="survey_html" widget="html" readonly="1" nolabel="1"/>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_verifier_quiz" string="Valider le quiz" type="object" class="btn-primary"/>
+                    <button string="Fermer" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

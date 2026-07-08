@@ -24,6 +24,8 @@
                             <field name="name"/>
                             <field name="sequence"/>
                             <field name="active"/>
+                            <field name="survey_id"/>
+                            <field name="quiz_validity_months"/>
                         </group>
                         <group>
                             <field name="pdf_file" filename="pdf_filename" widget="pdf_viewer"/>

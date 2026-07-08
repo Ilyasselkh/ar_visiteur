@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_ar_visiteur_signed" model="report.paperformat">
+        <field name="name">ARaymond - Visiteur Reports</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">42</field>
+        <field name="margin_bottom">24</field>
+        <field name="margin_left">12</field>
+        <field name="margin_right">12</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">8</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_ar_visiteur_signed" model="ir.actions.report">
+        <field name="name">Fiche visiteur</field>
+        <field name="model">ar.visiteur</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ar_visiteur.report_ar_visiteur_signed_document</field>
+        <field name="report_file">ar_visiteur.report_ar_visiteur_signed_document</field>
+        <field name="paperformat_id" ref="ar_visiteur.paperformat_ar_visiteur_signed"/>
+        <field name="print_report_name">'Fiche visiteur - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_ar_visiteur"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_ar_visiteur_signed_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="ar_visiteur.report_araymond_external_layout">
+                    <div class="page">
+                        <style>
+                            .ar-signed-title {
+                                color: #17324d;
+                                font-size: 24px;
+                                font-weight: 700;
+                                margin-bottom: 4px;
+                                text-align: center;
+                            }
+                            .ar-signed-ref {
+                                color: #4b5563;
+                                font-size: 13px;
+                                margin-bottom: 22px;
+                                text-align: center;
+                            }
+                            .ar-signed-section {
+                                margin-top: 16px;
+                                border: 1px solid #d8e0ea;
+                                border-radius: 6px;
+                                overflow: hidden;
+                            }
+                            .ar-signed-section h3 {
+                                margin: 0;
+                                padding: 9px 12px;
+                                background: #eef5f8;
+                                color: #17324d;
+                                font-size: 13px;
+                                font-weight: 700;
+                                text-transform: uppercase;
+                            }
+                            .ar-signed-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
+                            .ar-signed-table td {
+                                padding: 8px 12px;
+                                border-top: 1px solid #e5edf5;
+                                font-size: 12px;
+                                vertical-align: top;
+                            }
+                            .ar-signed-label {
+                                width: 32%;
+                                color: #6b7280;
+                                font-weight: 700;
+                            }
+                            .ar-signature-box {
+                                min-height: 120px;
+                                padding: 14px;
+                                border-top: 1px solid #e5edf5;
+                                text-align: center;
+                            }
+                            .ar-signature-box img {
+                                max-height: 115px;
+                                max-width: 360px;
+                            }
+                        </style>
+
+                        <div class="ar-signed-title">Fiche visiteur</div>
+                        <div class="ar-signed-ref">
+                            Référence :
+                            <strong><span t-field="o.name"/></strong>
+                        </div>
+
+                        <div class="ar-signed-section">
+                            <h3>Identité du visiteur</h3>
+                            <table class="ar-signed-table">
+                                <tr>
+                                    <td class="ar-signed-label">Nom</td>
+                                    <td><span t-field="o.nom"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="ar-signed-label">Prénom</td>
+                                    <td><span t-field="o.prenom"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="ar-signed-label">CIN</td>
+                                    <td><span t-field="o.cin"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="ar-signed-label">Personne visitée</td>
+                                    <td><span t-field="o.personne_a_visiter_id"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ar-signed-section">
+                            <h3>Détails de la visite</h3>
+                            <table class="ar-signed-table">
+                                <tr>
+                                    <td class="ar-signed-label">Date d'entrée</td>
+                                    <td><span t-field="o.date_entree"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="ar-signed-label">Heure d'entrée</td>
+                                    <td><span t-field="o.heure_entree" t-options="{'widget': 'float_time'}"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="ar-signed-label">Date de sortie</td>
+                                    <td><span t-field="o.date_sortie"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="ar-signed-label">Heure de sortie</td>
+                                    <td><span t-field="o.heure_sortie" t-options="{'widget': 'float_time'}"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="ar-signed-label">Durée de visite</td>
+                                    <td><span t-field="o.duree_visite" t-options="{'widget': 'float_time'}"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ar-signed-section">
+                            <h3>Quiz</h3>
+                            <table class="ar-signed-table">
+                                <tr>
+                                    <td class="ar-signed-label">Statut du quiz</td>
+                                    <td>
+                                        <t t-if="o.quiz_done">Effectué</t>
+                                        <t t-elif="o.quiz_required">À faire</t>
+                                        <t t-elif="o.quiz_skipped_reason"><span t-field="o.quiz_skipped_reason"/></t>
+                                        <t t-else="">Non requis</t>
+                                    </td>
+                                </tr>
+                                <tr t-if="o.quiz_date">
+                                    <td class="ar-signed-label">Date du quiz</td>
+                                    <td><span t-field="o.quiz_date"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="ar-signed-section">
+                            <h3>Signature</h3>
+                            <table class="ar-signed-table">
+                                <tr>
+                                    <td class="ar-signed-label">Date de signature</td>
+                                    <td><span t-field="o.signature_date"/></td>
+                                </tr>
+                            </table>
+                            <div class="ar-signature-box">
+                                <img t-if="o.signature" t-att-src="image_data_uri(o.signature)" alt="Signature visiteur"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
