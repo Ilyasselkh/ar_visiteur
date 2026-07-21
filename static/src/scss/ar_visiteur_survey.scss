@@ -4,15 +4,15 @@ html.ar_visiteur_survey_popup #wrapwrap,
 html.ar_visiteur_survey_popup main {
     min-height: 100%;
     overflow-x: hidden !important;
-    background: #ffffff !important;
+    background: #f8fbfb !important;
 }
 
 html.ar_visiteur_survey_popup .o_survey_form,
 html.ar_visiteur_survey_popup .o_survey_fill_form,
 html.ar_visiteur_survey_popup .o_survey_question_page {
     min-height: auto !important;
-    padding-top: 18px !important;
-    padding-bottom: 24px !important;
+    padding-top: 26px !important;
+    padding-bottom: 32px !important;
 }
 
 html.ar_visiteur_survey_popup .o_survey_form_content,
@@ -21,13 +21,69 @@ html.ar_visiteur_survey_popup .container {
     max-width: 820px !important;
 }
 
+html.ar_visiteur_survey_popup .o_survey_form_content,
+html.ar_visiteur_survey_popup .o_survey_question_page,
+html.ar_visiteur_survey_popup .o_survey_start {
+    border-radius: 8px !important;
+}
+
+html.ar_visiteur_survey_popup h1,
+html.ar_visiteur_survey_popup h2,
+html.ar_visiteur_survey_popup .o_survey_title {
+    color: #07142f !important;
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+}
+
+html.ar_visiteur_survey_popup .btn-primary,
+html.ar_visiteur_survey_popup button.btn-primary,
+html.ar_visiteur_survey_popup a.btn-primary,
+html.ar_visiteur_survey_popup .o_survey_start {
+    border-color: #0f766e !important;
+    border-radius: 8px !important;
+    background: #0f766e !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: 0 12px 26px rgba(15, 118, 110, 0.2) !important;
+}
+
+html.ar_visiteur_survey_popup .btn-primary:hover,
+html.ar_visiteur_survey_popup button.btn-primary:hover,
+html.ar_visiteur_survey_popup a.btn-primary:hover {
+    border-color: #115e59 !important;
+    background: #115e59 !important;
+}
+
+html.ar_visiteur_survey_popup .o_survey_choice_btn,
+html.ar_visiteur_survey_popup .o_survey_label,
+html.ar_visiteur_survey_popup label {
+    border-radius: 8px !important;
+}
+
+html.ar_visiteur_survey_popup .o_survey_choice_btn,
+html.ar_visiteur_survey_popup .o_survey_label {
+    border-color: #d9e7e4 !important;
+}
+
+html.ar_visiteur_survey_popup .o_survey_choice_btn:hover,
+html.ar_visiteur_survey_popup label:hover {
+    border-color: #0f766e !important;
+}
+
 html.ar_visiteur_survey_popup footer,
 html.ar_visiteur_survey_popup .o_footer,
 html.ar_visiteur_survey_popup .o_footer_copyright,
 html.ar_visiteur_survey_popup .o_brand_promotion,
 html.ar_visiteur_survey_popup .o_website_brand_promotion,
 html.ar_visiteur_survey_popup .o_powered_by_odoo,
-html.ar_visiteur_survey_popup a[href*="odoo.com"] {
+html.ar_visiteur_survey_popup .ar_visiteur_hidden_branding,
+html.ar_visiteur_survey_popup a[href*="odoo.com"],
+html.ar_visiteur_survey_popup img[src*="odoo"],
+html.ar_visiteur_survey_popup [class*="brand_promotion"],
+html.ar_visiteur_survey_popup [class*="powered_by"],
+html.ar_visiteur_survey_popup [class*="powered-by"] {
     display: none !important;
     visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }

@@ -35,6 +35,7 @@ Module de gestion des visiteurs :
     "assets": {
         "web.assets_backend": [
             "ar_visiteur/static/src/scss/ar_visiteur.scss",
+            "ar_visiteur/static/src/js/ar_visiteur_quiz_iframe.js",
         ],
         "web.assets_frontend": [
             "ar_visiteur/static/src/scss/ar_visiteur_survey.scss",

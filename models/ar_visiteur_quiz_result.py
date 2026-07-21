@@ -144,7 +144,7 @@ class HrEmployee(models.Model):
     )
 
     def _compute_ar_visiteur_quiz_result_count(self):
-        grouped = self.env["ar.visiteur.quiz.result"].read_group(
+        grouped = self.env["ar.visiteur.quiz.result"].sudo().read_group(
             [("personne_a_visiter_id", "in", self.ids)],
             ["personne_a_visiter_id"],
             ["personne_a_visiter_id"],

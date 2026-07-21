@@ -16,4 +16,15 @@
         <field name="name">Actif</field>
         <field name="privilege_id" ref="ar_visiteur.groups_privilege_ar_visiteur_param"/>
     </record>
+
+    <record id="groups_privilege_ar_visiteur_quiz_result" model="res.groups.privilege">
+        <field name="name">AR - Visiteur - Résultats Quiz</field>
+        <field name="category_id" ref="ar_visiteur.module_category_ar_visiteur"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="group_ar_visiteur_quiz_result" model="res.groups">
+        <field name="name">Actif</field>
+        <field name="privilege_id" ref="ar_visiteur.groups_privilege_ar_visiteur_quiz_result"/>
+    </record>
 </odoo>

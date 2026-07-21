@@ -217,7 +217,7 @@ action = env.ref("ar_visiteur.action_ar_visiteur_quiz_result").read()[0]
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('ar_visiteur_split_page')]" position="before">
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_view_quiz_results" type="object" class="oe_stat_button" icon="fa-check-square-o" invisible="quiz_result_count == 0">
+                    <button name="action_view_quiz_results" type="object" class="oe_stat_button" icon="fa-check-square-o" invisible="quiz_result_count == 0" groups="ar_visiteur.group_ar_visiteur_quiz_result">
                         <field name="quiz_result_count" widget="statinfo" string="Résultats quiz"/>
                     </button>
                 </div>
@@ -231,7 +231,7 @@ action = env.ref("ar_visiteur.action_ar_visiteur_quiz_result").read()[0]
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_view_ar_visiteur_quiz_results" type="object" class="oe_stat_button" icon="fa-check-square-o" invisible="ar_visiteur_quiz_result_count == 0">
+                <button name="action_view_ar_visiteur_quiz_results" type="object" class="oe_stat_button" icon="fa-check-square-o" invisible="ar_visiteur_quiz_result_count == 0" groups="ar_visiteur.group_ar_visiteur_quiz_result">
                     <field name="ar_visiteur_quiz_result_count" widget="statinfo" string="Quiz visiteurs"/>
                 </button>
             </xpath>

@@ -20,4 +20,5 @@ class ArVisiteurSignatureWizard(models.TransientModel):
             "signature_user_id": self.env.user.id,
         })
         self.visiteur_id._generate_signed_visit_pdf_attachment()
+        self.visiteur_id.action_archiver()
         return {"type": "ir.actions.client", "tag": "reload"}

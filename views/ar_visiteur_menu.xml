@@ -22,7 +22,8 @@
               name="Résultats Quiz"
               parent="menu_ar_visiteur_root"
               action="action_ar_visiteur_quiz_result_refresh"
-              sequence="25"/>
+              sequence="25"
+              groups="ar_visiteur.group_ar_visiteur_quiz_result"/>
 
     <menuitem id="menu_ar_visiteur_parametrage"
               name="Paramétrage"

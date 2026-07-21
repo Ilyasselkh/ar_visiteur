@@ -164,7 +164,8 @@
                                 <group class="ar_visiteur_panel ar_visiteur_signature_panel" string="Signature" invisible="not signature_done">
                                     <field name="signature_done" invisible="1"/>
                                     <field name="signature_date" readonly="1"/>
-                                    <field name="signature_user_id" readonly="1"/>
+                                    <field name="signature_user_id" invisible="1"/>
+                                    <field name="signature_visitor_name" readonly="1"/>
                                     <field name="signature" widget="image" readonly="1" nolabel="1"/>
                                 </group>
                                 <group class="ar_visiteur_panel" string="Quiz" invisible="1">

@@ -76,6 +76,10 @@ class ArVisiteur(models.Model):
     signature_done = fields.Boolean(string="Signature effectuée", readonly=True, copy=False, tracking=True)
     signature_date = fields.Datetime(string="Date de signature", readonly=True, copy=False, tracking=True)
     signature_user_id = fields.Many2one("res.users", string="Signature enregistrée par", readonly=True, copy=False)
+    signature_visitor_name = fields.Char(
+        string="Signature enregistrée par",
+        compute="_compute_signature_visitor_name",
+    )
     pdf_accueil = fields.Binary(string="Document d'accueil", compute="_compute_pdf_accueil")
     pdf_accueil_filename = fields.Char(string="Nom du document", compute="_compute_pdf_accueil")
     pdf_accueil_html = fields.Html(
@@ -89,7 +93,7 @@ class ArVisiteur(models.Model):
         return now.hour + (now.minute / 60.0)
 
     def _compute_quiz_result_count(self):
-        grouped = self.env["ar.visiteur.quiz.result"].read_group(
+        grouped = self.env["ar.visiteur.quiz.result"].sudo().read_group(
             [("visiteur_id", "in", self.ids)],
             ["visiteur_id"],
             ["visiteur_id"],
@@ -97,6 +101,11 @@ class ArVisiteur(models.Model):
         counts = {item["visiteur_id"][0]: item.get("visiteur_id_count", item.get("__count", 0)) for item in grouped}
         for rec in self:
             rec.quiz_result_count = counts.get(rec.id, 0)
+
+    @api.depends("nom", "prenom")
+    def _compute_signature_visitor_name(self):
+        for rec in self:
+            rec.signature_visitor_name = " ".join(part for part in [rec.nom, rec.prenom] if part)
 
     @api.model_create_multi
     def create(self, vals_list):
